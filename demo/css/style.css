@@ -1,0 +1,13 @@
+.custom-select{
+    text-align: center;
+    text-align-last: center;
+    font-family: Arial;
+    border-color: darkslategray	;
+    border-width: 3px;
+    font-size: 19px;
+}
+
+.table-hover{
+    cursor: pointer;
+}
+row{margin:5px;border:0;padding:0;}

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="js/library/echarts.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
+
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript" src="js/main_file.js"></script>
+
+    <script type="text/javascript" src="js/File_load.js"></script>
+    <script type="text/javascript" src="js/time_error_chart.js"></script>
+    <script type="text/javascript" src="js/summary_machine.js"></script>
+    <script type="text/javascript" src="js/summary_table.js"></script>
+    <script type="text/javascript" src="js/machine_details.js"></script>
+    <script type="text/javascript" src="js/efficiency.js"></script>
+    <script type="text/javascript" src="js/machine_error_dist.js"></script>
+    <script type="text/javascript" src="js/machine_error_table.js"></script>
+    <script type="text/javascript" src="js/machine_production.js"></script>
+
+
+
+</head>
+
+<body>
+
+<div class="wrapper">
+    <div class="row">
+        <div class="col-sm">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link"  href="index.html"><h5>Market</h5></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="production_page.html"><h5>Warehouse</h5></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="equipment_mainteniance.html"><h5>Knitting Room</h5></a>
+                </li>
+            </ul>
+        </div>
+        <div></div>
+        <div class="col-sm col-sm-1">Start Date:<input class="custom-select" type="text" id="sd" size="8"></div>
+        <div class="col-sm col-sm-1" >Start Time:
+            <select id="st" class="custom-select">
+                <option value='19:00:00'>19:00:00</option>
+                <option value='07:00:00'>07:00:00</option>
+
+            </select>
+        </div>
+        <div class="col-sm col-sm-1">End Date:<input class="custom-select" type="text" id="ed" size="8"></div>
+        <div class="col-sm col-sm-1" >End Time:
+            <select id="et" class="custom-select">
+                <option value='07:00:00'>07:00:00</option>
+                <option value='19:00:00'>19:00:00</option>
+            </select>
+
+        </div>
+        <br>
+        <button id= 'date_update' type="button" class="btn btn-warning" onclick="date_update()" style="height:65px;top:25px"><strong>INQUIRY</strong></button>
+
+        <div class="col-sm">
+
+        </div>
+
+
+
+    </div>
+    <div class="row">
+
+
+        <div class="col">
+                <h3 id="text_id">机器ID：</h3>
+                <br>
+            <div>
+
+                <div style="float:left;">
+                    <h5 id="text_open">开机：</h5>
+                </div>
+
+                <div style="float:left;margin-left: 50px">
+                    <h5 id="text_stop">停机：</h5>
+                </div>
+                <div style="float:right;">
+                    <h5 id="text_timeE">开机效率：</h5>
+                </div>
+            </div>
+
+            <div>
+
+                <div style="float:left;">
+                    <h5 id="text_cycle">Max周期：</h5>
+                </div>
+
+                <div style="float:left;margin-left: 25px">
+                    <h5 id="text_pieces">数量：</h5>
+                </div>
+                <div style="float:right;">
+                    <h5 id="text_workE">产品效率：</h5>
+                </div>
+            </div>
+
+            <div id="machine_product" style="width:98%; height:220px;">
+            </div>
+
+        </div>
+
+        <div class="col-6 col-md-3">
+            <br>
+            <div class="form-check-inline">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" id="error_counts" name="error" value="error_counts" checked>机器故障次数
+                </label>
+            </div>
+            <div class="form-check-inline">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" id="error_time" name="error" value="error_time">机器故障时间（分钟)
+                </label>
+            </div>
+
+            <div id="kaiji_number" style="width:98%; height:340px;">
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <br>
+            <div class="form-check-inline">
+                <label class="form-check-label" >
+                    <input type="radio" class="form-check-input" id="work_efficiency" name="efficiency" value="workE" checked>生产效率
+                </label>
+            </div>
+            <div class="form-check-inline">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" id="time_efficiency" name="efficiency" value="timeE">开机效率
+                </label>
+            </div>
+            <div id="kaiji_timeE" style="width:98%; height:340px;">
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="app">
+
+                <div style="float:left;">
+                    <select id="top_error_shifts">
+                        <option value = 1>Top 10 Error Counts</option>
+                        <option value = 2>Top 10 Stop Time</option>
+                    </select>
+                </div>
+
+                <div style="float:right;margin-right:10px;">
+                    <ul class="pagination" id = 'table_separate_shifts'>
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </div>
+
+            </div>
+            <div id = "error_rank">
+                <table class="table table-hover " id="error_result_shifts" style="font-size:14px;">
+                    <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th>Counts</th>
+                        <th id='table_diff_shifts'>Percentage</th>
+                    </tr>
+                    <tbody id="error_body_result_shifts">
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col">
+            <div id="error_summary_bar" style="width:99%;"></div>
+            <div id="error_summary_line" style="width:99%;"></div>
+        </div>
+        <div class="col-6">
+            <div id="date_data" style="width:98%; height:300px;">
+            </div>
+            <div id="sankey_diagram" style="width:110%;">
+            </div>
+        </div>
+        <div class="col">
+            <div id="table_chart_shifts" style="width:95%; height: 380px"></div>
+        </div>
+
+    </div>
+
+
+</div>
+</body>
+<script>
+    $(function() {
+        $( "#sd" ).datepicker();
+    });
+    $(function() {
+        $( "#ed" ).datepicker();
+    });
+    function date_update() {
+        let file = '7_26_8_2_error.csv';
+        let file_product = '7_26_8_2_product.csv';
+        let sd = $("#sd").val();
+        let st = $("#st").val();
+        let ed = $("#ed").val();
+        let et = $("#et").val();
+        if(sd && st && ed && et){
+            data_load(sd,st,ed,et,file);
+            //get radio button name
+            let option = $('input[name="error"]:checked').val();
+            efficiency(sd,st,ed,et,file,option);
+            let option2 = $('input[name="efficiency"]:checked').val();
+            machine_product_calculation(sd,st,ed,et,file_product,option2);
+
+
+        }else{
+            alert('Start Time or End Time is incorrect! Please re-select')
+        }
+
+
+        //error table
+        machine_error_table(sd,st,ed,et,file,'previous',1);
+
+    }
+
+    let ul = document.getElementById('table_separate_shifts');
+    ul.onclick = function(event) {
+        let caty= document.getElementById('top_error_shifts');
+        let index = caty.selectedIndex;                  //获取选中的index
+        let value = caty.options[index].value;
+
+        let sd = $("#sd").val();
+        let st = $("#st").val();
+        let ed = $("#ed").val();
+        let et = $("#et").val();
+        machine_error_table(sd,st,ed,et,'7_26_8_2_error.csv',event.target.innerHTML.toLowerCase(),value);
+    };
+
+
+    $('#top_error_shifts').on('change', function(e) {
+        let caty= document.getElementById('top_error_shifts');
+        let index = caty.selectedIndex;                  //获取选中的index
+        let value = caty.options[index].value;
+        let sd = $("#sd").val();
+        let st = $("#st").val();
+        let ed = $("#ed").val();
+        let et = $("#et").val();
+        machine_error_table(sd,st,ed,et,'7_26_8_2_error.csv','previous',value);
+    });
+
+    $('input[name="error"]').change(function(){
+        let option = $(this).val();
+        let file = '7_26_8_2_error.csv';
+        let sd = $("#sd").val();
+        let st = $("#st").val();
+        let ed = $("#ed").val();
+        let et = $("#et").val();
+        efficiency(sd,st,ed,et,file,option);
+
+    });
+
+    $('input[name="efficiency"]').change(function(){
+        let option = $(this).val();
+        let file_product = '7_26_8_2_product.csv';
+        let sd = $("#sd").val();
+        let st = $("#st").val();
+        let ed = $("#ed").val();
+        let et = $("#et").val();
+        machine_product_calculation(sd,st,ed,et,file_product,option);
+
+    })
+
+</script>
+</html>

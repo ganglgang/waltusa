@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="js/library/echarts.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script type="text/javascript" src="js/File_load.js"></script>
+    <script type="text/javascript" src="js/time_error_chart.js"></script>
+    <script type="text/javascript" src="js/summary_machine.js"></script>
+    <script type="text/javascript" src="js/summary_table.js"></script>
+    <script type="text/javascript" src="js/machine_details.js"></script>
+
+
+
+</head>
+
+<body>
+
+
+
+<div class="wrapper">
+    <div class="row">
+        <div class="col-sm">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active"  href="index.html"><h5>Market</h5></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  href="production_page.html"><h5>Warehouse</h5></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="equipment_mainteniance.html"><h5>Knitting Room</h5></a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm">
+
+            <select class="custom-select" style="width:100%;" id="shift" >
+                <option selected value = 1140>2020-07-14 19:00</option>
+                <option value=420>2020-07-14 07:00</option>
+            </select>
+            <select id="drop"></select>
+
+        </div>
+        <div class="col-sm">
+        </div>
+
+
+
+    </div>
+    <br>
+    <div class="row">
+        <div class="col" >
+            <select id="machine_summary">
+                <option selected value = 1>Machine Error Counts</option>
+                <option value = 2>Machine Downtime Duration</option>
+            </select>
+            <button id = 'myButton',type="button" class="btn btn-info">Sort</button>
+
+            <div id="machine_counts" style="width:95%; height:360px;"></div>
+
+        </div>
+        <div class="col" >
+            <div id="machine_detail" style="width:95%;"></div>
+
+        </div>
+        <div class="col" >
+            <div id = "time_most">
+                <table class="table table-hover " id="error_result">
+                    <thead>
+                    <select id="top_error">
+                        <option value = 1>Top 10 Error Counts</option>
+                        <option value = 2>Top 10 Stop Time</option>
+                    </select>
+                    <tr>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th>Counts</th>
+                        <th id='table_diff'>Percentage</th>
+                    </tr>
+                    <tbody id="error_body_result">
+                    </tbody>
+                </table>
+                <ul class="pagination" id = 'table_separate'>
+                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col" >
+            <div id="table_chart" style="width:95%; height: 380px"></div>
+        </div>
+
+
+
+
+    </div>
+    <div class="row">
+        <div class="col">
+            <div id="no_machine_detail" style="width:95%;"></div>
+            <div id="no_machine_detail2" style="width:95%;"></div>
+
+        </div>
+
+        <div class="col-6">
+            <div id="machine" style="width:95%; height:240px;">
+            </div>
+            <div id="error_dist" style="width:120%; height:320px;">
+            </div>
+
+        </div>
+        <div class="col">
+
+        </div>
+    </div>
+    </div>
+
+</div>
+</body>
+
+<script>
+    var time_line= document.getElementById('shift');
+    var index = time_line.selectedIndex;                  //获取选中的index
+    var value = time_line.options[index].value;
+
+    fileLoad(parseInt(value),'7_14.csv');
+
+    $('#top_error').on('change', function(e) {
+        let time_line= document.getElementById('shift');
+        let index = time_line.selectedIndex;                  //获取选中的index
+        let value = time_line.options[index].value;
+        let caty= document.getElementById('top_error');
+        let index2 = caty.selectedIndex;                  //获取选中的index
+        let value2 = caty.options[index2].value;
+
+        summary_table(value2,parseInt(value),'7_14.csv','previous')
+    });
+
+    //table different page onclick change
+    let ul = document.getElementById('table_separate');
+    ul.onclick = function(event) {
+        let target = event.target;
+        let time_line= document.getElementById('shift');
+        let index = time_line.selectedIndex;                  //获取选中的index
+        let value = time_line.options[index].value;
+        let caty= document.getElementById('top_error');
+        let index2 = caty.selectedIndex;                  //获取选中的index
+        let value2 = caty.options[index2].value;
+        summary_table(value2,parseInt(value),'7_14.csv',event.target.innerHTML.toLowerCase());
+    };
+
+
+
+
+    $('#shift').on('change', function(e) {
+        let time_line= document.getElementById('shift');
+        let index = time_line.selectedIndex;                  //获取选中的index
+        let value = time_line.options[index].value;
+        $(".machine_summary").val(1);
+
+        // change to the original select box value and textg
+        document.getElementById("machine_summary").value = 1;
+        document.getElementById("machine_summary").text = 'Machine Error Counts';
+        document.getElementById("top_error").value = 1;
+        document.getElementById("top_error").text = 'Top 5 Error Counts';
+
+
+
+        fileLoad(parseInt(value),'7_14.csv');
+        let image = 'image/staff'+value+'.jfif';
+        document.getElementById("myDivPic").src='image/staff420.jfif';
+
+
+    });
+
+    $('#machine_summary').on('change', function(e) {
+        sumamry_load('No');
+    });
+
+    $('#myButton').on('click', function(event) {
+        sumamry_load('Yes');
+    });
+
+    function sumamry_load(sort){
+        let time_line= document.getElementById('shift');
+        let index = time_line.selectedIndex;                  //获取选中的index
+        let value = time_line.options[index].value;
+        let caty= document.getElementById('machine_summary');
+        let index2 = caty.selectedIndex;                  //获取选中的index
+        let value2 = caty.options[index2].value;
+        machine_summary(parseInt(value2),parseInt(value),'7_14.csv',sort);
+    }
+
+
+    //create staff information
+
+        let bigImg = document.createElement("img");		//创建一个img元素
+        bigImg.src = "image/staff1140.jfif"  //给img元素的src属性赋值
+        //bigImg.width="320";  //320个像素 不用加px
+        let myDiv = document.getElementById('myDivPic'); //获得dom对象
+        myDiv.appendChild(bigImg);  	//为dom添加子元素img
+
+
+</script>
+
+
+
+
+</html>
